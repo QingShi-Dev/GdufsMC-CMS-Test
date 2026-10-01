@@ -6,6 +6,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  statuses: write
 concurrency:
   group: cms-batch-maintenance
   cancel-in-progress: false
@@ -25,3 +26,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/cms-maintain-test.mjs
+      - name: Check content paths on current head
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/cms-validate-content-test.mjs
