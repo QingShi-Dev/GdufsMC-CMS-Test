@@ -9,3 +9,7 @@ entries:
     player: 积分榜修改
     score: 1
     change: same
+  - rank: 3
+    player: 下一批测试
+    score: 12
+    change: same
