@@ -1,0 +1,29 @@
+name: CMS isolated lifecycle test
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/test-cms-branch-lifecycle.mjs
+      - .github/workflows/cms-lifecycle-test.yml
+permissions:
+  contents: read
+jobs:
+  lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test isolated local Git repository
+        run: node scripts/test-cms-branch-lifecycle.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cms-lifecycle-results
+          path: outputs/cms-branch-lifecycle-results.json
+          if-no-files-found: warn
