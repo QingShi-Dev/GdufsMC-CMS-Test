@@ -1,0 +1,27 @@
+name: CMS batch maintenance test
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, cms/content]
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: cms-batch-maintenance
+  cancel-in-progress: false
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Synchronize branch and ensure batch PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/cms-maintain-test.mjs
