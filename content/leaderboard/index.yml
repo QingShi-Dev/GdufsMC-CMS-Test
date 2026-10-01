@@ -1,0 +1,7 @@
+title: 测试积分榜
+subtitle: 仅用于 CMS 验收
+entries:
+  - rank: 1
+    player: TestPlayer
+    score: 100
+    change: same
