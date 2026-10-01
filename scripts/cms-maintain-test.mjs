@@ -9,7 +9,14 @@ const api=(path,body,method="POST")=>{
 const branch="cms/content";
 // Server-side merge preserves concurrently added commits; never reset or force-push.
 const main=api("git/ref/heads/main").object.sha;
-api("merges",{base:branch,head:main,commit_message:"chore: sync main into CMS work branch"});
+const relation=api(`compare/${main}...cms%2Fcontent`);
+if(relation.status==="behind") {
+ // Non-force update rejects a racing save rather than discarding it.
+ api("git/refs/heads/cms/content",{sha:main,force:false},"PATCH");
+ console.log("Fast-forwarded cms/content to main");
+} else if(relation.status==="diverged") {
+ api("merges",{base:branch,head:main,commit_message:"chore: sync main into CMS work branch"});
+}
 const diff=api(`compare/${main}...cms%2Fcontent`);
 if((diff.files?.length??0)>=300)throw Error("Diff may be truncated; manual review required");
 const unexpected=diff.files.filter(f=>![f.filename,f.previous_filename].filter(Boolean).every(p=>p.startsWith("content/")));
