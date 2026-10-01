@@ -5,3 +5,7 @@ entries:
     player: TestPlayer
     score: 4567676767676767700
     change: same
+  - rank: 2
+    player: 积分榜修改
+    score: 1
+    change: same
